@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import catchAsync from '../middlewares/asyncRequestHndler';
+import catchAsync from '../middlewares/catchAsync';
 import apiRoutes from './apiRoutes';
 const serverApiRoutes: Router = Router();
 

@@ -1,4 +1,4 @@
-import catchAsync from './asyncRequestHndler';
+import catchAsync from './catchAsync';
 
 const routeNotFoundHandler = () =>
   catchAsync(async (_, res) => {

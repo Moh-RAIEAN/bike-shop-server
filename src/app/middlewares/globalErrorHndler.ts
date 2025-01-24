@@ -8,6 +8,7 @@ import handleDuplicateKeyError from '../errors/handleDuplicateError';
 import handelValidationError from '../errors/handleValidationError';
 import handleZodError from '../errors/handleZodError';
 import { TErrorResponse } from '../interface/error';
+import sendResponse from '../utils/sendResponse';
 
 export default function (): ErrorRequestHandler {
   let errorObj: TErrorResponse = {
@@ -43,6 +44,11 @@ export default function (): ErrorRequestHandler {
       errorObj = { ...errorObj, message: error?.message };
 
     if (res.headersSent) next(error);
-    res.status(errorObj.statusCode!).send(errorObj);
+    sendResponse(res, {
+      statusCode: errorObj.statusCode,
+      message: errorObj?.message,
+      errorSource: errorObj?.errorSources,
+      stack: errorObj?.stack,
+    });
   };
 }
