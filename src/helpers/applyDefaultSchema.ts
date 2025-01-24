@@ -1,6 +1,8 @@
 import { Schema } from 'mongoose';
 
-const setDefaultSchemaOptions = (schema: Schema): void => {
+const setDefaultSchemaOptions = <GSchema, GMethods>(
+  schema: Schema<GSchema, GMethods>,
+): void => {
   schema.set('toJSON', {
     transform: function (_doc, ret) {
       ret.__v = undefined;
