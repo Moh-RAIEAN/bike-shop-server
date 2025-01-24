@@ -1,8 +1,6 @@
 import { RequestHandler } from 'express';
 
-const asyncRequestHandler = (
-  requestHandler: RequestHandler,
-): RequestHandler => {
+const catchAsync = (requestHandler: RequestHandler): RequestHandler => {
   return async (req, res, next) => {
     try {
       await requestHandler(req, res, next);
@@ -12,4 +10,4 @@ const asyncRequestHandler = (
   };
 };
 
-export default asyncRequestHandler;
+export default catchAsync;

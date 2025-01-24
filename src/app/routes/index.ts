@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import asyncRequestHandler from '../middlewares/asyncRequestHndler';
+import catchAsync from '../middlewares/asyncRequestHndler';
 import apiRoutes from './apiRoutes';
 const serverApiRoutes: Router = Router();
 
 serverApiRoutes.get(
   '/',
-  asyncRequestHandler(async (_, res) => {
+  catchAsync(async (_, res) => {
     res.json({ ok: true });
   }),
 );
