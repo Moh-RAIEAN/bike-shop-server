@@ -4,6 +4,7 @@ import validateRequest from '../../middlewares/validateRequest';
 import { upload } from '../../utils/uploadImageToCloudinary';
 import { UserValidations } from '../User/user.validation';
 import { AuthControllers } from './auth.controller';
+import { AuthValidations } from './auth.validation';
 
 export const AuthRouter: Router = Router();
 
@@ -17,4 +18,10 @@ AuthRouter.post(
   }),
   validateRequest(UserValidations.createUserValidationSchema),
   AuthControllers.registerUser,
+);
+
+AuthRouter.post(
+  '/login',
+  validateRequest(AuthValidations.loginValidationSchema),
+  AuthControllers.login,
 );

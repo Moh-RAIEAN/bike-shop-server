@@ -5,6 +5,7 @@ import AppError from '../../errors/AppError';
 import { uploadImageToCloudinary } from '../../utils/uploadImageToCloudinary';
 import { TUser } from '../User/user.interface';
 import User from '../User/user.model';
+import { TLoginUser } from './auth.interface';
 import { createToken } from './auth.utils';
 
 const createUserIntoDb = async (profileImage: any, payload: TUser) => {
@@ -28,7 +29,42 @@ const createUserIntoDb = async (profileImage: any, payload: TUser) => {
 
   const jwtPayload = {
     id: String(newUser?._id),
+    email: String(newUser?.email),
     role: newUser?.role,
+  };
+
+  const createdAccessToken = createToken(
+    jwtPayload,
+    getConfigOption('jwtAccessTokenSecret'),
+    getConfigOption('jwtAccessTokenExpiresIn'),
+  );
+
+  const createdRefreshToken = createToken(
+    jwtPayload,
+    getConfigOption('jwtRegreshTokenSecret'),
+    getConfigOption('jwtRefreshTokenExpiresIn'),
+  );
+
+  return { createdAccessToken, createdRefreshToken };
+};
+
+const login = async (payload: TLoginUser) => {
+  const { email, password } = payload;
+  const isUserExist = await User.isUserExistWithEmail(email, true);
+  if (!isUserExist)
+    throw new AppError(StatusCodes.NOT_FOUND, 'User not found', [
+      { path: 'email', message: 'User not found' },
+    ]);
+
+  const isPasswordMatched = await isUserExist.checkIsPasswordMatched(password);
+  if (!isPasswordMatched)
+    throw new AppError(StatusCodes.BAD_REQUEST, 'Incorrect password', [
+      { path: 'password', message: 'Incorrect password' },
+    ]);
+  const jwtPayload = {
+    id: String(isUserExist?._id),
+    email: String(isUserExist?.email),
+    role: isUserExist?.role,
   };
 
   const createdAccessToken = createToken(
@@ -48,4 +84,5 @@ const createUserIntoDb = async (profileImage: any, payload: TUser) => {
 
 export const AuthServices = {
   createUserIntoDb,
+  login,
 };

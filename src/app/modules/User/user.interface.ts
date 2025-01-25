@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Document, Model, Types } from 'mongoose';
 import { UserConstants } from './user.constants';
 
 export type TUserRoles = keyof typeof UserConstants.userRolesMapper;
@@ -13,9 +13,39 @@ export type TUser = {
 
 export type TUserMethods = {
   checkIsPasswordMatched(password: string): Promise<boolean>;
-  updatePassword: (userId: string, password: string) => Promise<TUser | null>;
+  updatePassword: (
+    userId: string,
+    password: string,
+  ) => Promise<
+    | (Document<unknown, Record<string, unknown>, TUser> &
+        Omit<
+          TUser & {
+            _id: Types.ObjectId;
+          } & {
+            __v: number;
+          },
+          keyof TUserMethods
+        > &
+        TUserMethods)
+    | null
+  >;
 };
 export interface TUserModel
   extends Model<TUser, Record<string, unknown>, TUserMethods> {
-  isUserExistWithEmail: (email: string) => Promise<TUser | null>;
+  isUserExistWithEmail: (
+    email: string,
+    includePassword?: boolean,
+  ) => Promise<
+    | (Document<unknown, Record<string, unknown>, TUser> &
+        Omit<
+          TUser & {
+            _id: Types.ObjectId;
+          } & {
+            __v: number;
+          },
+          keyof TUserMethods
+        > &
+        TUserMethods)
+    | null
+  >;
 }

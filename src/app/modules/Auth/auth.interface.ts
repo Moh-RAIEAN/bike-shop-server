@@ -2,13 +2,14 @@ import { Secret } from 'jsonwebtoken';
 import { TUserRoles } from '../User/user.interface';
 
 export type TLoginUser = {
-  id: string;
+  email: string;
   password: string;
   expiresIn: string;
 };
 
 export type TJwtPayload = {
   id: string;
+  email: string;
   role: TUserRoles;
 };
 

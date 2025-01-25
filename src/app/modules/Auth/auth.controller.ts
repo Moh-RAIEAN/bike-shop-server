@@ -22,6 +22,25 @@ const registerUser = catchAsync(async (req, res) => {
   });
 });
 
+const login = catchAsync(async (req, res) => {
+  const authData = req.body;
+
+  const { createdAccessToken, createdRefreshToken } =
+    await AuthServices.login(authData);
+
+  const cookieOptions = {
+    httpOnly: true,
+    secure: getConfigOption('env') === 'development',
+  };
+  res.cookie('refreshToken', createdRefreshToken, cookieOptions);
+
+  sendResponse(res, {
+    message: 'User logged in successfully',
+    data: createdAccessToken,
+  });
+});
+
 export const AuthControllers = {
   registerUser,
+  login,
 };
