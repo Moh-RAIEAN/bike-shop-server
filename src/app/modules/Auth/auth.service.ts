@@ -61,6 +61,7 @@ const login = async (payload: TLoginUser) => {
     throw new AppError(StatusCodes.BAD_REQUEST, 'Incorrect password', [
       { path: 'password', message: 'Incorrect password' },
     ]);
+
   const jwtPayload = {
     id: String(isUserExist?._id),
     email: String(isUserExist?.email),

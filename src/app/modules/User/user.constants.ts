@@ -3,7 +3,9 @@ const userRolesMapper = {
   admin: 'admin',
 } as const;
 
-const userRoles = Object.keys(userRolesMapper);
+const userRoles = Object.keys(
+  userRolesMapper,
+) as unknown as (keyof typeof userRolesMapper)[];
 export const UserConstants = {
   userRolesMapper,
   userRoles,

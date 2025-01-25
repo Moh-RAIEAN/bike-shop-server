@@ -6,14 +6,14 @@ const setDefaultSchemaOptions = <GSchema, GMethods>(
   schema.set('toJSON', {
     transform: function (_doc, ret) {
       ret.__v = undefined;
-      ret.password = undefined;
+      delete ret.password;
     },
   });
 
   schema.set('toObject', {
     transform: function (_doc, ret) {
       ret.__v = undefined;
-      ret.password = undefined;
+      delete ret.password;
     },
   });
 };
