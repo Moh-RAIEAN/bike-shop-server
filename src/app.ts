@@ -1,6 +1,6 @@
 import cors from 'cors';
 import express, { Application } from 'express';
-import globalErrorHndler from './app/middlewares/errorHandlers/globalErrorHndler';
+import globalErrorHndler from './app/middlewares/globalErrorHndler';
 import routeNotFoundHandler from './app/middlewares/routeNotFoundHandler';
 import serverApiRoutes from './app/routes';
 

@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 import bcrypt from 'bcrypt';
-import { model, Schema } from 'mongoose';
+import { CallbackError, model, Schema } from 'mongoose';
 import setDefaultSchemaOptions from '../../../helpers/applyDefaultSchema';
+import getConfigOption from '../../configs';
 import { UserConstants } from './user.constants';
 import { TUser, TUserMethods, TUserModel } from './user.interface';
 
@@ -17,6 +19,7 @@ const userSchema = new Schema<TUser, TUserModel, TUserMethods>({
   password: {
     type: String,
     required: [true, 'password is required'],
+    select: 0,
   },
   profileImage: {
     type: String,
@@ -29,13 +32,31 @@ const userSchema = new Schema<TUser, TUserModel, TUserMethods>({
   },
 });
 
+userSchema.pre('save', async function (next) {
+  try {
+    const user = this;
+    const hashedPassword = await bcrypt.hash(
+      user?.password,
+      getConfigOption('bcryptSaltRounds'),
+    );
+
+    user.password = hashedPassword;
+    next();
+  } catch (error) {
+    next(error as CallbackError);
+  }
+});
+
 userSchema.methods = {
-  comparePassword: async function (password) {
+  checkIsPasswordMatched: async function (password) {
     return await bcrypt.compare(password, this.password);
   },
 
   updatePassword: async function (password) {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(
+      password,
+      getConfigOption('bcryptSaltRounds'),
+    );
     return this.updateOne({ password: hashedPassword });
   },
 };

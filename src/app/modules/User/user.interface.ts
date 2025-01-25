@@ -12,7 +12,7 @@ export type TUser = {
 };
 
 export type TUserMethods = {
-  comparePassword(password: string): Promise<boolean>;
+  checkIsPasswordMatched(password: string): Promise<boolean>;
   updatePassword: (userId: string, password: string) => Promise<TUser | null>;
 };
 export interface TUserModel

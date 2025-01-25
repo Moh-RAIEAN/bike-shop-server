@@ -1,0 +1,51 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { StatusCodes } from 'http-status-codes';
+import getConfigOption from '../../configs';
+import AppError from '../../errors/AppError';
+import { uploadImageToCloudinary } from '../../utils/uploadImageToCloudinary';
+import { TUser } from '../User/user.interface';
+import User from '../User/user.model';
+import { createToken } from './auth.utils';
+
+const createUserIntoDb = async (profileImage: any, payload: TUser) => {
+  const isUserExist = await User.isUserExistWithEmail(payload?.email);
+  if (isUserExist)
+    throw new AppError(StatusCodes.BAD_REQUEST, 'Email is already registered', [
+      { path: 'email', message: 'Email is already registered' },
+    ]);
+
+  if (profileImage) {
+    const { secure_url } = await uploadImageToCloudinary(profileImage);
+    payload.profileImage = secure_url || '';
+  }
+
+  const newUser = await User.create(payload);
+  if (!newUser)
+    throw new AppError(
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      'Can not create user, internal server error',
+    );
+
+  const jwtPayload = {
+    id: String(newUser?._id),
+    role: newUser?.role,
+  };
+
+  const createdAccessToken = createToken(
+    jwtPayload,
+    getConfigOption('jwtAccessTokenSecret'),
+    getConfigOption('jwtAccessTokenExpiresIn'),
+  );
+
+  const createdRefreshToken = createToken(
+    jwtPayload,
+    getConfigOption('jwtRegreshTokenSecret'),
+    getConfigOption('jwtRefreshTokenExpiresIn'),
+  );
+
+  return { createdAccessToken, createdRefreshToken };
+};
+
+export const AuthServices = {
+  createUserIntoDb,
+};
