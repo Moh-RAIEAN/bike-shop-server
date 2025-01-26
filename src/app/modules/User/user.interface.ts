@@ -13,10 +13,7 @@ export type TUser = {
 
 export type TUserMethods = {
   checkIsPasswordMatched(password: string): Promise<boolean>;
-  updatePassword: (
-    userId: string,
-    password: string,
-  ) => Promise<
+  updatePassword: (password: string) => Promise<
     | (Document<unknown, Record<string, unknown>, TUser> &
         Omit<
           TUser & {
@@ -34,7 +31,7 @@ export interface TUserModel
   extends Model<TUser, Record<string, unknown>, TUserMethods> {
   isUserExistWithEmail: (
     email: string,
-    includePassword?: boolean,
+    options?: { includePasswordField: boolean },
   ) => Promise<
     | (Document<unknown, Record<string, unknown>, TUser> &
         Omit<

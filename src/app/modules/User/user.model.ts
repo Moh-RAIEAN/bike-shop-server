@@ -62,8 +62,8 @@ userSchema.methods = {
 };
 
 userSchema.statics = {
-  isUserExistWithEmail: async (email, includePassword = false) => {
-    return includePassword
+  isUserExistWithEmail: async (email, options) => {
+    return options?.includePasswordField
       ? User.findOne({ email }).select('+password')
       : User.findOne({ email });
   },

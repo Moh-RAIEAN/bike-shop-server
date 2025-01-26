@@ -1,7 +1,9 @@
 import { Router } from 'express';
+import auth from '../../middlewares/auth';
 import catchAsync from '../../middlewares/catchAsync';
 import validateRequest from '../../middlewares/validateRequest';
 import { upload } from '../../utils/uploadImageToCloudinary';
+import { UserConstants } from '../User/user.constants';
 import { UserValidations } from '../User/user.validation';
 import { AuthControllers } from './auth.controller';
 import { AuthValidations } from './auth.validation';
@@ -24,4 +26,11 @@ AuthRouter.post(
   '/login',
   validateRequest(AuthValidations.loginValidationSchema),
   AuthControllers.login,
+);
+
+AuthRouter.post(
+  '/change-password',
+  auth(...UserConstants.userRoles),
+  validateRequest(AuthValidations.changePasswordSchema),
+  AuthControllers.changePassword,
 );
