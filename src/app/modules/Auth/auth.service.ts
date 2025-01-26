@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { StatusCodes } from 'http-status-codes';
-import { JwtPayload } from 'jsonwebtoken';
+import Jwt, { JwtPayload } from 'jsonwebtoken';
 import getConfigOption from '../../configs';
 import AppError from '../../errors/AppError';
 import { uploadImageToCloudinary } from '../../utils/uploadImageToCloudinary';
@@ -136,9 +136,40 @@ const forgotPassword = async (email: string) => {
   return { resetPasswordUiLink };
 };
 
+const resetPassword = async (
+  token: string,
+  payload: Pick<TLoginUser, 'email' | 'password'>,
+) => {
+  const { email: decodedEmail } = Jwt.verify(
+    token,
+    getConfigOption('jwtResetPasswordSecret'),
+  ) as JwtPayload;
+  const { email, password: resetedPassword } = payload;
+  if (decodedEmail !== email)
+    throw new AppError(StatusCodes.BAD_REQUEST, 'Authentication failed');
+
+  const isUserExist = await User.isUserExistWithEmail(email);
+  if (!isUserExist)
+    throw new AppError(StatusCodes.NOT_FOUND, 'User not found', [
+      { path: 'email', message: 'User not found' },
+    ]);
+
+  const userWithResetedPassword =
+    await isUserExist.updatePassword(resetedPassword);
+  if (!userWithResetedPassword)
+    throw new AppError(
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      'Can not reset password, internal server error',
+    );
+
+  // ! sendemail to user mail
+  return { reseted: true };
+};
+
 export const AuthServices = {
   createUserIntoDb,
   login,
   changePassword,
   forgotPassword,
+  resetPassword,
 };

@@ -40,3 +40,9 @@ AuthRouter.post(
   validateRequest(AuthValidations.forgotPasswordSchema),
   AuthControllers.forgotPassword,
 );
+
+AuthRouter.post(
+  '/reset-password',
+  validateRequest(AuthValidations.resettPasswordSchema),
+  AuthControllers.resetPassword,
+);
