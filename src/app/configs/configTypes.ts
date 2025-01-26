@@ -5,11 +5,13 @@ export type TconfigOptions = {
   readonly env: string;
   readonly databaseUrl: string;
   readonly bcryptSaltRounds: number;
+  readonly clientUrl: string;
   readonly jwtAccessTokenSecret: string;
   readonly jwtRegreshTokenSecret: string;
   readonly jwtAccessTokenExpiresIn: string;
   readonly jwtRefreshTokenExpiresIn: string;
   readonly jwtResetPasswordSecret: string;
+  readonly jwtResetTokenExpiresIn: string;
   readonly cloudinaryCloudName: string;
   readonly cloudinaryApiKey: string;
   readonly cloudinaryApiSecret: string;

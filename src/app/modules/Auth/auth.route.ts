@@ -34,3 +34,9 @@ AuthRouter.post(
   validateRequest(AuthValidations.changePasswordSchema),
   AuthControllers.changePassword,
 );
+
+AuthRouter.post(
+  '/forgot-password',
+  validateRequest(AuthValidations.forgotPasswordSchema),
+  AuthControllers.forgotPassword,
+);

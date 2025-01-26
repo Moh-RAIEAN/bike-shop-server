@@ -117,8 +117,28 @@ const changePassword = async (
   return { updated: true };
 };
 
+const forgotPassword = async (email: string) => {
+  const isUserExist = await User.isUserExistWithEmail(email);
+  if (!isUserExist)
+    throw new AppError(StatusCodes.NOT_FOUND, 'User not found', [
+      { path: 'email', message: 'User not found' },
+    ]);
+
+  const { _id, role } = isUserExist;
+  const resetJwtToken = createToken(
+    { id: _id.toString(), role, email },
+    getConfigOption('jwtResetPasswordSecret'),
+    getConfigOption('jwtResetTokenExpiresIn'),
+  );
+  const resetPasswordUiLink = `${getConfigOption('clientUrl')}/auth/reset-password?userEmail=${email}&token=${resetJwtToken}`;
+
+  // ! sendemail to user mail
+  return { resetPasswordUiLink };
+};
+
 export const AuthServices = {
   createUserIntoDb,
   login,
   changePassword,
+  forgotPassword,
 };
