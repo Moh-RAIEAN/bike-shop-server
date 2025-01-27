@@ -27,8 +27,13 @@ const userSchema = new Schema<TUser, TUserModel, TUserMethods>({
   },
   role: {
     type: String,
-    enum: UserConstants.userRoles,
+    enum: UserConstants?.userRoles,
     default: UserConstants?.userRolesMapper.customer,
+  },
+  status: {
+    type: String,
+    enum: UserConstants.userStatuses,
+    default: UserConstants?.userStatusMapper?.active,
   },
 });
 

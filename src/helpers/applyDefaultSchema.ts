@@ -3,6 +3,7 @@ import { Schema } from 'mongoose';
 const setDefaultSchemaOptions = <GSchema, GMethods>(
   schema: Schema<GSchema, GMethods>,
 ): void => {
+  schema.set('timestamps', true);
   schema.set('toJSON', {
     transform: function (_doc, ret) {
       ret.__v = undefined;

@@ -2,6 +2,7 @@ import { Document, Model, Types } from 'mongoose';
 import { UserConstants } from './user.constants';
 
 export type TUserRoles = keyof typeof UserConstants.userRolesMapper;
+export type TUserStatuses = keyof typeof UserConstants.userStatusMapper;
 
 export type TUser = {
   name: string;
@@ -9,6 +10,7 @@ export type TUser = {
   password: string;
   profileImage?: string;
   role: TUserRoles;
+  status: TUserStatuses;
 };
 
 export type TUserMethods = {

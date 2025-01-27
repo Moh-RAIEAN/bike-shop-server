@@ -21,7 +21,21 @@ const getUsers = catchAsync(async (req, res) => {
   });
 });
 
+const changeUserStatus = catchAsync(async (req, res) => {
+  const userId = req.params?.userId;
+  const statusData = req.body;
+  const userWithUpdatedStatus = await AdminServices.changeUserStatus(
+    userId,
+    statusData,
+  );
+  sendResponse(res, {
+    message: 'Users status changed successfully',
+    meta: userWithUpdatedStatus,
+  });
+});
+
 export const AdminControllers = {
   getUser,
   getUsers,
+  changeUserStatus,
 };
