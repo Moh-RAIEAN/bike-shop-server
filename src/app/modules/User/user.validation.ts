@@ -8,4 +8,8 @@ const createUserValidationSchema = z.object({
   }),
 });
 
-export const UserValidations = { createUserValidationSchema };
+const updateUserSchema = z.object({
+  name: z.string().trim().optional(),
+});
+
+export const UserValidations = { createUserValidationSchema, updateUserSchema };

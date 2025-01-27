@@ -11,6 +11,22 @@ const getUserProfile = catchAsync(async (req, res) => {
   });
 });
 
+const updateUserProfile = catchAsync(async (req, res) => {
+  const user = req.user;
+  const updatedUserProfileData = req.body;
+  const file = req.file;
+  if (file) updatedUserProfileData.profileImage = file;
+  const updatedUserProfile = await UserServices.updateUserProfile(
+    user,
+    updatedUserProfileData,
+  );
+  sendResponse(res, {
+    message: 'User profile updated successfully',
+    data: updatedUserProfile,
+  });
+});
+
 export const UserController = {
   getUserProfile,
+  updateUserProfile,
 };
