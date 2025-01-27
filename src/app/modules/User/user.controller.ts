@@ -11,16 +11,6 @@ const getUserProfile = catchAsync(async (req, res) => {
   });
 });
 
-const getUser = catchAsync(async (req, res) => {
-  const userId = req.params?.userId;
-  const retrivedUser = await UserServices.getUserFromDb(userId);
-  sendResponse(res, {
-    message: 'User retrived successfully',
-    data: retrivedUser,
-  });
-});
-
 export const UserController = {
   getUserProfile,
-  getUser,
 };

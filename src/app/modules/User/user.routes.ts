@@ -5,8 +5,6 @@ import { UserController } from './user.controller';
 
 export const UserRouter: Router = Router();
 
-const { userRoles, userRolesMapper } = UserConstants;
-const { admin } = userRolesMapper;
+const { userRoles } = UserConstants;
 
 UserRouter.get('/me', auth(...userRoles), UserController.getUserProfile);
-UserRouter.get('/:userId', auth(admin), UserController.getUser);
