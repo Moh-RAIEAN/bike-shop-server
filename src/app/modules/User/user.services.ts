@@ -10,6 +10,13 @@ const getUserProfile = async (payload: JwtPayload) => {
   return user;
 };
 
+const getUserFromDb = async (id: string) => {
+  const user = await User.findById(id);
+  if (!user) throw new AppError(StatusCodes.NOT_FOUND, 'User not found');
+  return user;
+};
+
 export const UserServices = {
   getUserProfile,
+  getUserFromDb,
 };
