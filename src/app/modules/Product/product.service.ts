@@ -30,6 +30,16 @@ const createProductIntoDb = async (
   return createdProduct;
 };
 
+const getSingleProductFromDb = async (productId: string) => {
+  const isProductExist = await Product.findById(productId);
+  if (!isProductExist)
+    throw new AppError(
+      StatusCodes.NOT_FOUND,
+      'Requested product was not found',
+    );
+  return isProductExist;
+};
 export const ProductServices = {
   createProductIntoDb,
+  getSingleProductFromDb,
 };
