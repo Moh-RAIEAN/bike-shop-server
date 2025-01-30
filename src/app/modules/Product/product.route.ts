@@ -24,3 +24,16 @@ ProductRouter.post(
 );
 ProductRouter.get('/', ProductControllers.getAllProducts);
 ProductRouter.get('/:productId', ProductControllers.getSingleProduct);
+ProductRouter.patch(
+  '/:productId',
+  auth(UserConstants.userRolesMapper.admin),
+  upload.single('productImage'),
+  catchAsync(async (req, _res, next) => {
+    const productData = req.body?.productData;
+    const parsedUserData = JSON.parse(productData);
+    req.body = parsedUserData;
+    next();
+  }),
+  validateRequest(ProductValidations.updateProductValidationSchema),
+  ProductControllers.updateProduct,
+);

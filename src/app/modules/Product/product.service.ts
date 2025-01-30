@@ -57,8 +57,35 @@ const getSingleProductFromDb = async (productId: string) => {
   return isProductExist;
 };
 
+const updateProductIntoDb = async (
+  productId: string,
+  file: Express.Multer.File | undefined,
+  payload: TProduct,
+) => {
+  const isProductExist = await Product.findById(productId);
+  if (!isProductExist)
+    throw new AppError(StatusCodes.BAD_REQUEST, `Product not found`);
+
+  if (file) {
+    const { secure_url } = await uploadImageToCloudinary(file);
+    payload.imageUrl = secure_url || '';
+  }
+
+  const updatedProduct = await Product.findByIdAndUpdate(productId, payload, {
+    new: true,
+    runValidators: true,
+  });
+  if (!updatedProduct)
+    throw new AppError(
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      'Can not update product, internal serrver error',
+    );
+  return updatedProduct;
+};
+
 export const ProductServices = {
   createProductIntoDb,
   getSingleProductFromDb,
   getAllProductsFromDb,
+  updateProductIntoDb,
 };

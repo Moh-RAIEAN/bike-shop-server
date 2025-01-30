@@ -34,6 +34,32 @@ const createProductValidationSchema = z.object({
   }),
 });
 
+const updateProductValidationSchema = z.object({
+  file: imageFileValidationSchema.optional(),
+  body: z.object({
+    name: z.string().optional(),
+    brand: z.string().optional(),
+    modelName: z.string().optional(),
+    category: z.string().optional(),
+    price: z.number().positive().optional(),
+    description: z.string().optional(),
+    frameMaterial: z.string().optional(),
+    wheelSize: z.number().positive().optional(),
+    gearCount: z.number().positive().optional(),
+    brakeType: z.string().optional(),
+    weight: z.number().positive().optional(),
+    quantity: z.number().nonnegative().optional(),
+    batteryCapacity: z.number().nonnegative().optional(),
+    topSpeed: z.number().nonnegative().optional(),
+    engineType: z.string().optional(),
+    maxPower: z.number().nonnegative().optional(),
+    mileagePerLiter: z.number().nonnegative().optional(),
+    inStock: z.boolean().optional(),
+    isDeleted: z.boolean().optional(),
+  }),
+});
+
 export const ProductValidations = {
   createProductValidationSchema,
+  updateProductValidationSchema,
 };
