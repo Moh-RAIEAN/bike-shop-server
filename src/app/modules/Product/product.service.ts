@@ -83,9 +83,24 @@ const updateProductIntoDb = async (
   return updatedProduct;
 };
 
+const deleteProductFromDb = async (productId: string) => {
+  const isProductExist = await Product.findById(productId);
+  if (!isProductExist)
+    throw new AppError(StatusCodes.BAD_REQUEST, `Product not found`);
+
+  const deletedProduct = await Product.findByIdAndDelete(productId);
+  if (!deletedProduct)
+    throw new AppError(
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      'Can not delete product, internal serrver error',
+    );
+  return deletedProduct;
+};
+
 export const ProductServices = {
   createProductIntoDb,
   getSingleProductFromDb,
   getAllProductsFromDb,
   updateProductIntoDb,
+  deleteProductFromDb,
 };

@@ -37,3 +37,8 @@ ProductRouter.patch(
   validateRequest(ProductValidations.updateProductValidationSchema),
   ProductControllers.updateProduct,
 );
+ProductRouter.delete(
+  '/:productId',
+  auth(UserConstants.userRolesMapper.admin),
+  ProductControllers.deleteProduct,
+);
