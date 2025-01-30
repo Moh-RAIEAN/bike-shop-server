@@ -40,7 +40,12 @@ export default function (): ErrorRequestHandler {
           { path: '', message: 'session expired, please login again' },
         ],
       };
-    } else if (error instanceof Error)
+    } else if (
+      error?.name === 'MulterError' &&
+      error?.code === 'LIMIT_FILE_SIZE'
+    )
+      errorObj = { ...errorObj, message: 'File size must be less than 3MB' };
+    else if (error instanceof Error)
       errorObj = { ...errorObj, message: error?.message };
 
     if (res.headersSent) next(error);
