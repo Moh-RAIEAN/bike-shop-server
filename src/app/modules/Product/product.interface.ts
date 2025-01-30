@@ -10,7 +10,7 @@ export type TBrakeType = (typeof ProductConstants.brakeType)[number];
 export type TProduct = {
   name: string;
   brand: string;
-  modelName: string;
+  model: string;
   imageUrl: string;
   category: TProductCategory;
   price: number;

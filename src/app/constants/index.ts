@@ -1,5 +1,5 @@
 export const excludeFieldsFromFilterQuery = [
-  'searchTerm',
+  'search',
   'sort',
   'page',
   'skip',

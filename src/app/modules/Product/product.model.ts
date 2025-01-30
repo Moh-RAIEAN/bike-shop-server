@@ -12,7 +12,7 @@ const productSchema = new Schema<TProduct>({
     type: String,
     required: true,
   },
-  modelName: {
+  model: {
     type: String,
     required: true,
     unique: true,

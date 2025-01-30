@@ -22,5 +22,5 @@ ProductRouter.post(
   validateRequest(ProductValidations.createProductValidationSchema),
   ProductControllers.createProduct,
 );
-
+ProductRouter.get('/', ProductControllers.getAllProducts);
 ProductRouter.get('/:productId', ProductControllers.getSingleProduct);
