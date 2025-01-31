@@ -20,6 +20,8 @@ const configOptions: TconfigOptions = {
   cloudinaryApiKey: `${process.env.CLOUDINARY_API_KEY}`,
   cloudinaryApiSecret: `${process.env.CLOUDINARY_API_SECRET}`,
   cloudinaryUrl: `${process.env.CLOUDINARY_URL}`,
+  nodeMailerUserName: `${process.env.NODE_MAILER_USER_NAME}`,
+  nodeMailerPass: `${process.env.NODE_MAILER_PASS}`,
   getConfigOption: (option) => configOptions[option],
 };
 

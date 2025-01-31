@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import Jwt, { JwtPayload } from 'jsonwebtoken';
 import getConfigOption from '../../configs';
 import AppError from '../../errors/AppError';
+import { sendEmail } from '../../utils/sendEmail';
 import { uploadImageToCloudinary } from '../../utils/uploadImageToCloudinary';
 import { TUser } from '../User/user.interface';
 import User from '../User/user.model';
@@ -130,10 +131,10 @@ const forgotPassword = async (email: string) => {
     getConfigOption('jwtResetPasswordSecret'),
     getConfigOption('jwtResetTokenExpiresIn'),
   );
-  const resetPasswordUiLink = `${getConfigOption('clientUrl')}/auth/reset-password?userEmail=${email}&token=${resetJwtToken}`;
+  const resetPasswordUiLink = `${getConfigOption('clientUrl')}/auth/reset-password?id=${_id}&userEmail=${email}&token=${resetJwtToken}`;
 
-  // ! sendemail to user mail
-  return { resetPasswordUiLink };
+  sendEmail(isUserExist?.email, resetPasswordUiLink);
+  return { mailSended: true };
 };
 
 const resetPassword = async (

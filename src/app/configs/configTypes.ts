@@ -16,5 +16,7 @@ export type TconfigOptions = {
   readonly cloudinaryApiKey: string;
   readonly cloudinaryApiSecret: string;
   readonly cloudinaryUrl: string;
+  readonly nodeMailerUserName: string;
+  readonly nodeMailerPass: string;
   readonly getConfigOption: TGetConfigOptionFn<TconfigOptions>;
 };
