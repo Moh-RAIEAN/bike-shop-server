@@ -133,7 +133,7 @@ const forgotPassword = async (email: string) => {
   );
   const resetPasswordUiLink = `${getConfigOption('clientUrl')}/auth/reset-password?id=${_id}&userEmail=${email}&token=${resetJwtToken}`;
 
-  sendEmail(isUserExist?.email, resetPasswordUiLink);
+  sendEmail(isUserExist, resetPasswordUiLink);
   return { mailSended: true };
 };
 

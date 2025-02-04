@@ -4,7 +4,26 @@ import { CallbackError, model, Schema } from 'mongoose';
 import setDefaultSchemaOptions from '../../../helpers/applyDefaultSchema';
 import getConfigOption from '../../configs';
 import { UserConstants } from './user.constants';
-import { TUser, TUserMethods, TUserModel } from './user.interface';
+import { TAddress, TUser, TUserMethods, TUserModel } from './user.interface';
+
+export const addressSchema = new Schema<TAddress>({
+  city: {
+    type: String,
+    required: true,
+  },
+  country: {
+    type: String,
+    required: true,
+  },
+  postalCode: {
+    type: String,
+    required: true,
+  },
+  street: {
+    type: String,
+    required: true,
+  },
+});
 
 const userSchema = new Schema<TUser, TUserModel, TUserMethods>({
   name: {
@@ -25,6 +44,12 @@ const userSchema = new Schema<TUser, TUserModel, TUserMethods>({
     type: String,
     default: '',
   },
+  address: {
+    type: addressSchema,
+  },
+  contactNo: {
+    type: String,
+  },
   role: {
     type: String,
     enum: UserConstants?.userRoles,
@@ -34,6 +59,10 @@ const userSchema = new Schema<TUser, TUserModel, TUserMethods>({
     type: String,
     enum: UserConstants.userStatuses,
     default: UserConstants?.userStatusMapper?.active,
+  },
+  needsToUpdateProfile: {
+    type: Boolean,
+    default: true,
   },
 });
 

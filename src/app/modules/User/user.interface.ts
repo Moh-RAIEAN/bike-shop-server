@@ -3,14 +3,23 @@ import { UserConstants } from './user.constants';
 
 export type TUserRoles = keyof typeof UserConstants.userRolesMapper;
 export type TUserStatuses = keyof typeof UserConstants.userStatusMapper;
+export type TAddress = {
+  street: string;
+  city: string;
+  postalCode: string;
+  country: string;
+};
 
 export type TUser = {
   name: string;
   email: string;
   password: string;
   profileImage?: string;
+  address?: TAddress;
+  contactNo?: string;
   role: TUserRoles;
   status: TUserStatuses;
+  needsToUpdateProfile: boolean;
 };
 
 export type TUserMethods = {

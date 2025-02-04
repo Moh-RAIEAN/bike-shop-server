@@ -5,6 +5,7 @@ import { pick } from '../../utils/pick';
 import { uploadImageToCloudinary } from '../../utils/uploadImageToCloudinary';
 import { TUser } from './user.interface';
 import User from './user.model';
+import { UserValidations } from './user.validation';
 
 const getUserProfile = async (payload: JwtPayload) => {
   const { id } = payload;
@@ -15,11 +16,39 @@ const getUserProfile = async (payload: JwtPayload) => {
 
 const updateUserProfile = async (user: JwtPayload, payload: TUser) => {
   const { id } = user;
-  const userDataToUpdate = pick(payload, ['name', 'profileImage']);
+  let userDataToUpdate: Record<string, unknown> = pick(payload, [
+    'name',
+    'profileImage',
+    'contactNo',
+  ]);
+  const updatedAddress = pick(payload, ['address']);
 
   const isUserExist = await User.findById(id);
   if (!isUserExist) throw new AppError(StatusCodes.NOT_FOUND, 'User not found');
 
+  if (
+    isUserExist?.needsToUpdateProfile &&
+    (updatedAddress || userDataToUpdate?.contactNo)
+  ) {
+    const parsedUserDataToUpdate =
+      await UserValidations.needsToUpdateProfileSchema.parseAsync({
+        ...userDataToUpdate,
+        address: updatedAddress?.address,
+      });
+    userDataToUpdate = {
+      ...userDataToUpdate,
+      parsedUserDataToUpdate,
+      needsToUpdateProfile: false,
+    };
+  }
+  if (updatedAddress) {
+    const address = updatedAddress?.address as Record<string, unknown>;
+    const modifiedUserAddress = Object.keys(address).reduce(
+      (acc, field) => ({ ...acc, [`address.${field}`]: address[field] }),
+      {},
+    );
+    userDataToUpdate = { ...userDataToUpdate, ...modifiedUserAddress };
+  }
   if (userDataToUpdate?.profileImage) {
     const { secure_url } = await uploadImageToCloudinary(
       userDataToUpdate?.profileImage,
